@@ -3,14 +3,13 @@ from .models import *
     
 class CourseAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("Section ID", {"fields": ["id_section"]}),
         ("Department", {"fields": ["dept_name"]}),
         ("Title", {"fields": ["title"]}),
         ("Course Number", {"fields": ["course_number"]}),
         ("Credits For Taking Course", {"fields": ["credits"]}),
     ]
 
-    list_display = ["id_course", "id_section", "dept_name", "title", "course_number", "credits"]
+    list_display = ["id_course", "dept_name", "title", "course_number", "credits"]
     list_filter = ["title"]
     search_fields = ["title", "course_number"]
 
@@ -36,6 +35,7 @@ class ClassroomAdmin(admin.ModelAdmin):
 
 class DepartmentAdmin(admin.ModelAdmin):
     fieldsets = [
+        ("Department Name", {"fields": ["dept_name"]}),
         ("Building ID", {"fields": ["id_building"]}),
         ("Department's Budget", {"fields": ["budget"]}),
         ("Contact Email for Department", {"fields": ["contact_email"]}),
@@ -61,6 +61,8 @@ class EquipmentAdmin(admin.ModelAdmin):
 class SectionAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Classroom ID", {"fields": ["id_classroom"]}),
+        ("Course ID", {"fields": ["id_course"]}),
+        ("Time Section", {"fields": ["id_time_section"]}),
         ("Semester in which section takes place", {"fields": ["semester"]}),
         ("Year in which section takes place", {"fields": ["year"]}),
         ("Section Number", {"fields": ["section_number"]}),
@@ -72,16 +74,14 @@ class SectionAdmin(admin.ModelAdmin):
 
 class TimeSectionAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("Section ID", {"fields": ["id_section"]}),
         ("Start time of Class", {"fields": ["start_time"]}),
         ("Finish time of Class", {"fields": ["finish_time"]}),
         ("Duration of Class", {"fields": ["duration"]}),
         ("Which days the class takes place", {"fields": ["days"]}),
     ]
 
-    list_display = ["id_time_section", "id_section", "start_time", "finish_time", "duration", "days"]
-    list_filter = ["id_section"]
-    search_fields = ["id_time_section", "id_section"]
+    list_display = ["id_time_section", "start_time", "finish_time", "duration", "days"]
+    search_fields = ["id_time_section"]
 
 class BlackoutHourAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -91,9 +91,9 @@ class BlackoutHourAdmin(admin.ModelAdmin):
         ("Which date the blackout hours occur", {"fields": ["effective_date"]}),
     ]
 
-    list_display = ["id_blackout_hour", "id_classroom", "id_time_slot", "reason", "effective_date"]
+    list_display = ["id_blackout_hours", "id_classroom", "id_time_slot", "reason", "effective_date"]
     list_filter = ["id_classroom"]
-    search_fields = ["id_blackout_hour", "id_classroom"]
+    search_fields = ["id_blackout_hours", "id_classroom"]
 
 class ClassroomRequestAdmin(admin.ModelAdmin):
     fieldsets = [

@@ -4,6 +4,14 @@ import datetime
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
+class ClassManager(models.Manager):
+    def has_conflict(self, class_instance):
+        return self.filter(
+            day=class_instance.days,
+            start_time=class_instance.start_time,
+            finish_time=class_instance.finish_time,
+        ).exists()
+    pass
 
 class Building(models.Model):
     id_building = models.BigAutoField(primary_key=True)
@@ -55,36 +63,8 @@ class Equipment(models.Model):
     def __str__(self):
         return str(self.id_equipment)
 
-class Section(models.Model):
-    id_section = models.BigAutoField(primary_key=True)
-    id_classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, db_column="id_classroom")
-    semester = models.CharField(max_length=50)
-    year = models.IntegerField()
-    section_number = models.IntegerField()
-
-    class Meta:
-        db_table = "Section"
-
-    def __str__(self):
-        return str(self.id_section)
-
-class Course(models.Model):
-    id_course = models.BigAutoField(primary_key=True)
-    id_section = models.ForeignKey(Section, on_delete=models.CASCADE, db_column="id_section")
-    dept_name = models.ForeignKey(Department, on_delete=models.CASCADE, db_column="dept_name")
-    title = models.CharField(max_length=50)
-    course_number = models.IntegerField()
-    credits = models.IntegerField()
-
-    class Meta:
-        db_table = "Course"
-
-    def __str__(self):
-        return str(self.id_course)
-
 class Time_Section(models.Model):
     id_time_section = models.BigAutoField(primary_key=True)
-    id_section = models.ForeignKey(Section, on_delete=models.CASCADE, db_column="id_section")
     start_time = models.TimeField()
     finish_time = models.TimeField()
     duration = models.IntegerField()
@@ -96,8 +76,36 @@ class Time_Section(models.Model):
     def __str__(self):
         return str(self.id_time_section)
 
+class Course(models.Model):
+    id_course = models.BigAutoField(primary_key=True)
+    dept_name = models.ForeignKey(Department, on_delete=models.CASCADE, db_column="dept_name")
+    title = models.CharField(max_length=50)
+    course_number = models.IntegerField()
+    credits = models.IntegerField()
+
+    class Meta:
+        db_table = "Course"
+
+    def __str__(self):
+        return str(self.id_course)
+
+class Section(models.Model):
+    id_section = models.BigAutoField(primary_key=True)
+    id_time_section = models.ForeignKey(Time_Section, on_delete=models.CASCADE, db_column="id_time_section")
+    id_course = models.ForeignKey(Course, on_delete=models.CASCADE, db_column="id_course")
+    id_classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, db_column="id_classroom")
+    semester = models.CharField(max_length=50)
+    year = models.IntegerField()
+    section_number = models.IntegerField()
+
+    class Meta:
+        db_table = "Section"
+
+    def __str__(self):
+        return str(self.id_section)
+
 class Blackout_Hour(models.Model):
-    id_blackout_hour = models.BigAutoField(primary_key=True)
+    id_blackout_hours = models.BigAutoField(primary_key=True)
     id_classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, db_column="id_classroom")
     id_time_slot = models.ForeignKey(Time_Section, on_delete=models.CASCADE, db_column="id_time_slot")
     reason = models.CharField(max_length=50)
@@ -107,7 +115,24 @@ class Blackout_Hour(models.Model):
         db_table = "Blackout_Hour"
 
     def __str__(self):
-        return str(self.id_blackout_hour)
+        return str(self.id_blackout_hours)
+
+    def save(self, *args, **kwargs):
+        if self.has_conflict():
+            handle_conflict(self)
+        super().save(*args,**kwargs)
+
+    def has_conflict(self):
+        while conflict:
+            for section in Section.objects:
+                if (self.id_time_slot.start_time < section.id_time_slot.end_time) or (self.id_time_slot.end_time > section.id_time_slot.start_time):
+                    handle_conflict(self, section)
+                    conflict = True
+
+        return overlap
+
+    def handle_conflict(self):
+        self.time_section
 
 
 class Classroom_Request(models.Model):
