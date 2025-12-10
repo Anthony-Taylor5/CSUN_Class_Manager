@@ -16,9 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import index
+from .views import *
 
 urlpatterns = [
     path("", index, name="index"),
     path('admin/', admin.site.urls),
+    path("buildings/", buildings, name="buildings"),
+    path("classrooms/", classrooms, name="classrooms"),
+    path("departments/", departments, name="departments"),
+    path("time_slots/", time_slots, name="time_slots"),
+    path("<int:pk>/", SectionsView.as_view(), name="sections")
 ]

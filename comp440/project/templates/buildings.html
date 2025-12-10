@@ -6,28 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title><!html>
 </head>
-    <a href="{% url 'buildings' %}">Buildings</a>
+    <a href="{% url 'index' %}">Courses</a>
     <a href="{% url 'classrooms' %}">Classrooms</a>
     <a href="{% url 'departments' %}">Departments</a>
     <a href="{% url 'time_slots' %}">Time Slots</a>
     
 <body class="index-page">
    
-{% if courses %}
+{% if buildings %}
 <div class="row">
 	<div class="col-lg-12">
 		<br>
 		<div class="box-element">
-            {% for course in courses %}
+            {% for building in buildings %}
                 <div class="row">
                     <div class="column">
-                        <a href= "{% url 'sections' course.id_course %}">
-                            <p>
-                                Course ID: {{course.id_course}}
-                                Course Title: {{course.title}}
-                                Course Number: {{course.course_number}}
-                                Course Credits: {{course.credits}}
-                            </p>
+                        <p>
+                            Building ID: {{building.id_building}} 
+                            Room Count: {{building.room_count}}
+                            Building Name: {{building.name}}
+                            Address: {{building.address}}</p>
                         </a>
                     </div>
                 </div>
@@ -36,7 +34,7 @@
 	</div>
 </div>
 {% else %}
-    <h1>No courses are available.</h1>
+    <h1>No buildings are available.</h1>
 {% endif %}
 
 </body>

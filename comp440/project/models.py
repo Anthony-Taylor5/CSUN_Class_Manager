@@ -3,15 +3,7 @@ from django.contrib.auth.models import User, AbstractUser
 import datetime
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-
-class ClassManager(models.Manager):
-    def has_conflict(self, class_instance):
-        return self.filter(
-            day=class_instance.days,
-            start_time=class_instance.start_time,
-            finish_time=class_instance.finish_time,
-        ).exists()
-    pass
+from datetime import datetime, time, timedelta
 
 class Building(models.Model):
     id_building = models.BigAutoField(primary_key=True)
@@ -118,21 +110,34 @@ class Blackout_Hour(models.Model):
         return str(self.id_blackout_hours)
 
     def save(self, *args, **kwargs):
-        if self.has_conflict():
-            handle_conflict(self)
-        super().save(*args,**kwargs)
+        conflicting_sections = self.check_conflicts()
+        if conflicting_sections:
+            conflicting_sections = str(conflicting_sections)
+            print(f"Conflicts with class sections: {', '.join(conflicting_sections)}")
+            # raise ValidationError(f"Conflicts with class sections: {', '.join(conflicting_sections)}")
+        super().save(*args, **kwargs)
 
-    def has_conflict(self):
-        while conflict:
-            for section in Section.objects:
-                if (self.id_time_slot.start_time < section.id_time_slot.end_time) or (self.id_time_slot.end_time > section.id_time_slot.start_time):
-                    handle_conflict(self, section)
-                    conflict = True
+    def check_conflicts(self):
+        sections = Section.objects.all()
+        conflicting_sections = []
+        for section in sections:
+            if self.is_overlapping(section):
+                tempdatetime = datetime.today().date()
+                tempdatetime = datetime.combine(tempdatetime, section.id_time_section.finish_time)
+                tempdatetime = tempdatetime + timedelta(hours=1)
+                temptime = tempdatetime.time()
+                conflicting_sections.append(section.id_time_section)
+                new_time_section = Time_Section.objects.create(start_time=section.id_time_section.finish_time, finish_time=temptime, duration=0,days=section.id_time_section.days)
+                new_time_section.save()
+                self.id_time_slot = new_time_section
+                self.notify_user(section.id_time_section, new_time_section.id_time_section)
+        return conflicting_sections
 
-        return overlap
+    def is_overlapping(self, section):
+        return((self.id_time_slot.start_time < section.id_time_section.finish_time and self.id_time_slot.finish_time > section.id_time_section.start_time))
 
-    def handle_conflict(self):
-        self.time_section
+    def notify_user(self, id, newID):
+        print(f"Blackout hour conflicts with section id {id}, moved to {newID}.")
 
 
 class Classroom_Request(models.Model):

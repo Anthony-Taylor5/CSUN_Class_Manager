@@ -6,28 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title><!html>
 </head>
+    <a href="{% url 'index' %}">Courses</a>
     <a href="{% url 'buildings' %}">Buildings</a>
     <a href="{% url 'classrooms' %}">Classrooms</a>
     <a href="{% url 'departments' %}">Departments</a>
-    <a href="{% url 'time_slots' %}">Time Slots</a>
     
 <body class="index-page">
    
-{% if courses %}
+{% if time_slots %}
 <div class="row">
 	<div class="col-lg-12">
 		<br>
 		<div class="box-element">
-            {% for course in courses %}
+            {% for time_slot in time_slots %}
                 <div class="row">
                     <div class="column">
-                        <a href= "{% url 'sections' course.id_course %}">
-                            <p>
-                                Course ID: {{course.id_course}}
-                                Course Title: {{course.title}}
-                                Course Number: {{course.course_number}}
-                                Course Credits: {{course.credits}}
-                            </p>
+                        <p>
+                            Time Slot ID: {{time_slot.id_time_section}} 
+                            Start Time: {{time_slot.start_time}}
+                            Finish Time: {{time_slot.finish_time}}
+                            Duration (Minutes): {{time_slot.duration}}
+                            Days: {{time_slot.days}}</p>
                         </a>
                     </div>
                 </div>
@@ -36,7 +35,7 @@
 	</div>
 </div>
 {% else %}
-    <h1>No courses are available.</h1>
+    <h1>No Time Slots are available.</h1>
 {% endif %}
 
 </body>
