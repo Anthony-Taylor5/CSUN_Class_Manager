@@ -127,7 +127,7 @@ class Blackout_Hour(models.Model):
                 tempdatetime = tempdatetime + timedelta(hours=1)
                 temptime = tempdatetime.time()
                 conflicting_sections.append(section.id_time_section)
-                new_time_section = Time_Section.objects.create(start_time=section.id_time_section.finish_time, finish_time=temptime, duration=0,days=section.id_time_section.days)
+                new_time_section = Time_Section.objects.create(start_time=section.id_time_section.finish_time, finish_time=temptime, duration=60,days=section.id_time_section.days)
                 new_time_section.save()
                 self.id_time_slot = new_time_section
                 self.notify_user(section.id_time_section, new_time_section.id_time_section)

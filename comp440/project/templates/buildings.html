@@ -10,6 +10,7 @@
     <a href="{% url 'classrooms' %}">Classrooms</a>
     <a href="{% url 'departments' %}">Departments</a>
     <a href="{% url 'time_slots' %}">Time Slots</a>
+    <a href="{% url 'admin:index' %}">Admin Portal</a>
     
 <body class="index-page">
    
@@ -24,8 +25,8 @@
                         <p>
                             Building ID: {{building.id_building}} 
                             Room Count: {{building.room_count}}
-                            Building Name: {{building.name}}
-                            Address: {{building.address}}</p>
+                            Building Name: {{building.building_name}}
+                            Address: {{building.building_address}}</p>
                         </a>
                     </div>
                 </div>

@@ -10,6 +10,7 @@
     <a href="{% url 'buildings' %}">Buildings</a>
     <a href="{% url 'classrooms' %}">Classrooms</a>
     <a href="{% url 'time_slots' %}">Time Slots</a>
+    <a href="{% url 'admin:index' %}">Admin Portal</a>
     
 <body class="index-page">
    
@@ -24,7 +25,7 @@
                         <p>
                             Department Name: {{department.dept_name}} 
                             Building: {{department.id_building}}
-                            Budget: {{departmnet.budget}}
+                            Budget: ${{department.budget}}
                             Email: {{department.contact_email}}</p>
                         </a>
                     </div>
