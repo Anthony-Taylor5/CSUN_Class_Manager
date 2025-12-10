@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title><!html>
+</head>
+    
+<body class="index-page">
+   
+<!-- list of items on site -->
+{% if courses %}
+<div class="row">
+	<div class="col-lg-12">
+		<br>
+		<div class="box-element">
+            {% for course in courses %}
+                <div class="row">
+                    <div class="column">
+                        <p>
+                            Course ID: {{course.id_course}} 
+                            Section ID: {{course.id_section}}
+                            Course Title: {{course.title}}
+                            Course Number: {{course.course_number}}
+                            Course Credits: {{course.credits}}</p>
+                        </a>
+                    </div>
+                </div>
+                <br>
+            {% endfor %}
+	</div>
+</div>
+{% else %}
+    <h1>No courses are available.</h1>
+{% endif %}
+
+</body>
