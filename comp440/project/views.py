@@ -12,9 +12,9 @@ def index(request):
     context={'courses':courses}
     return render(request, 'index.html', context)
 
-class SectionsView(generic.DetailView):
-    model = Section
-    template_name = "sections.html"
+# class SectionsView(generic.DetailView):
+#     model = Section
+#     template_name = "sections.html"
 
 
 def buildings(request):
